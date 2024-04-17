@@ -104,6 +104,6 @@ int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 """
 
-print(convert(strs1))
-# if __name__ == "__main__":
-#     print(convert(sys.argv[1]))
+# print(convert(strs1))
+if __name__ == "__main__":
+    print(convert(sys.argv[1]))

@@ -33,7 +33,7 @@ def _convert(func_decl):
 
 
 def convert(strs):
-    func_decl_strs = re.split(r"\n\n+", strs)
+    func_decl_strs = re.split(r"(?<=\);)", strs) # 正向后视断言
     results = []
     for func_decl_str in func_decl_strs:
         func_decl_str = func_decl_str.strip()

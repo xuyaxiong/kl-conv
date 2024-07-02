@@ -5,8 +5,8 @@ import sys
 type_dict = {
     "unsigned char *": "uchar*",
     "unsigned char*": "uchar*",
-    "const char*": "uchar*",
-    "const char *": "uchar*",
+    "const char*": "string",
+    "const char *": "string",
 }
 
 

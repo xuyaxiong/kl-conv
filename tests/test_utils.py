@@ -1,54 +1,8 @@
-# -*- coding: utf-8 -*-
-import re
-import sys
+from src.lib.utils import (
+    convert,
+)
 
-type_dict = {
-    "unsigned char *": "uchar*",
-    "unsigned char*": "uchar*",
-    "const char*": "string",
-    "const char *": "string",
-}
-
-
-def _convert(func_decl):
-    result = re.findall(r"(.* )?(.*) (.*)\((.*)\);", func_decl)[0]
-    ret_type = result[1]
-    func_name = result[2]
-    types_arr = result[3:]
-    params_decl = types_arr[0].split(",")
-    type_arr = []
-    for param_decl in params_decl:
-        (type, name) = re.findall(r"(.*[*\s])(.*)", param_decl.strip())[0]
-        type = type.strip()
-        type = type_dict.get(type.strip()) or type
-        type_str = f"'{type}'"
-        name = name.strip()
-        type_arr.append(type_str)
-
-    type_arr_str = f"[{', '.join(type_arr)}]"
-    ret_type_str = f"'{ret_type}'"
-    func_decl_content = f"[{', '.join([ret_type_str, type_arr_str])}]"
-    result = f"{func_name}: {func_decl_content}"
-    return result
-
-
-def convert(strs):
-    func_decl_strs = re.split(r"(?<=\);)", strs) # 正向后视断言
-    results = []
-    for func_decl_str in func_decl_strs:
-        func_decl_str = func_decl_str.strip()
-        if func_decl_str == "":
-            continue
-        groups = re.findall(r"(/\*[\s\S]*\*/\n)?\n?([\s\S]*)", func_decl_str)
-        (comm, func_decl) = groups[0]
-        comm = comm.strip() + "\n" if comm else ""
-        func_decl = re.sub(r'[\n\t]', '', func_decl)
-        tmp = f"{comm}{_convert(func_decl)}"
-        results.append(tmp)
-    return ",\n\n".join(results) + ","
-
-
-strs1 = """
+strs = """
 /*
 @brief //更新params变换矩阵
 @param[in] calib 原变换矩阵(double[11], 图像中心x/y + 投影矩阵9)
@@ -104,6 +58,6 @@ int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 """
 
-# print(convert(strs1))
-if __name__ == "__main__":
-    print(convert(sys.argv[1]))
+
+def test_convert():
+    print(convert(strs))

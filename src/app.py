@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
-from src.lib.dll_tools import convert
+from src.lib.utils import convert
 
 
 def submit():
@@ -34,6 +34,3 @@ submit_button = tk.Button(root, text="转换", command=submit)
 submit_button.pack(pady=10)
 
 root.mainloop()
-
-# 打包指令
-# pyinstaller --onefile --noconsole --name='func_decl_converter' .\app.py

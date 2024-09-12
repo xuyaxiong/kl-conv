@@ -10,7 +10,9 @@ type_dict = {
 
 
 def split_to_docstring(strs):
-    docstring_list = re.split(r"(?<=\);)", strs)  # 正向后视断言
+    docstring_list = [
+        item[0] for item in re.findall(r"((/\*[\s\S]*?\*/\s*)?\w*\s*\w+\(.*?\);)", strs)
+    ]
     arr = [
         docstring.strip() for docstring in docstring_list if len(docstring.strip()) > 0
     ]

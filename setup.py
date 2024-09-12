@@ -1,13 +1,15 @@
 import subprocess
+from src import VERSION
 
 
 def build_executable():
+    output_name = f"kl_conv_{VERSION}"
     # PyInstaller 命令参数
     command = [
         "pyinstaller",  # 调用 pyinstaller
         "--onefile",  # 将所有文件打包成一个可执行文件
         "--noconsole",  # 关闭控制台窗口 (Windows)
-        "--name=func_decl_converter",  # 指定生成的可执行文件名称
+        f"--name={output_name}",  # 指定生成的可执行文件名称
         "./src/app.py",  # 要打包的 Python 文件
     ]
 

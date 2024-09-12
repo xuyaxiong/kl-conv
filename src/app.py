@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
+from src import VERSION
 from src.lib.utils import convert
 
 
@@ -10,7 +11,7 @@ def submit():
 
 
 root = tk.Tk()
-root.title("C++函数声明转换V1.1")
+root.title(f"考拉C++函数声明转换V{VERSION}(xuyax)")
 
 # 设置窗口最大化
 root.state("zoomed")

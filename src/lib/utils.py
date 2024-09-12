@@ -1,4 +1,5 @@
 import re
+from .test_data import docstrings
 
 type_dict = {
     "unsigned char *": "uchar*",
@@ -9,15 +10,18 @@ type_dict = {
 
 
 def split_to_docstring(strs):
-    return re.split(r"(?<=\);)", strs)  # 正向后视断言
+    docstring_list = re.split(r"(?<=\);)", strs)  # 正向后视断言
+    arr = [
+        docstring.strip() for docstring in docstring_list if len(docstring.strip()) > 0
+    ]
+    return arr
 
 
 def split_docstring_to_comm_and_decl(docstring):
-    docstring = docstring.strip()
     if docstring != "":
         groups = re.findall(r"(/\*[\s\S]*\*/\n)?\n?([\s\S]*)", docstring)
         (comm, decl) = groups[0]
-        comm = comm.strip() + "\n" if comm else ""
+        comm = comm.strip() if comm else ""
         decl = re.sub(r"[\n\t]", "", decl)
         return (comm, decl)
     else:
@@ -28,15 +32,14 @@ def parse_decl(decl):
     result = re.findall(r"(.* )?(.*) (.*)\((.*)\);", decl)[0]
     ret_type = result[1]
     func_name = result[2]
-    types_arr = result[3:]
-    params_decl = types_arr[0].split(",")
+    types_str = result[3]
+    params_decl = [type_str.strip() for type_str in types_str.split(",")]
     type_arr = []
     for param_decl in params_decl:
-        (type, name) = re.findall(r"(.*[*\s])(.*)", param_decl.strip())[0]
+        (type, _) = re.findall(r"(.*[*\s])(.*)", param_decl)[0]
         type = type.strip()
-        type = type_dict.get(type.strip()) or type
+        type = type_dict.get(type) or type
         type_str = f"'{type}'"
-        name = name.strip()
         type_arr.append(type_str)
 
     type_arr_str = f"[{', '.join(type_arr)}]"
@@ -47,7 +50,7 @@ def parse_decl(decl):
 
 
 def export_comm_and_decl(comm, decl):
-    return f"{comm}{decl}"
+    return f"{comm}\n{decl}"
 
 
 def convert(strs):
@@ -63,3 +66,7 @@ def convert(strs):
         else:
             continue
     return ",\n\n".join(result) + ","
+
+
+if __name__ == "__main__":
+    print(split_to_docstring(docstrings))

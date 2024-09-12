@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
-from dll_tools import convert
+from src.lib.dll_tools import convert
 
 
 def submit():

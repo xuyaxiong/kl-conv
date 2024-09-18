@@ -10,7 +10,7 @@ int updateTransformParams(double* calib, double* rectify, double* update);
 @param[in] motorPos 采图时的x/y轴位置读数(double[2])
 @param[out] worldCoor 机械坐标(double[2 * n], x/y坐标)
 */
-int transformBiaxial(int n, double* imgCoor, double* params, double* motorPos, double* worldCoor);
+PS_API int transformBiaxial(int n, double* imgCoor, double* params, double* motorPos, double* worldCoor);
 
 /*
 @brief //机械坐标反变换至图像坐标
@@ -23,7 +23,7 @@ int transformBiaxial(int n, double* imgCoor, double* params, double* motorPos, d
 int transformInvBiaxial(int n, double* worldCoor, double* params, double* motorPos, double* imgCoor);
 
 
-int transformInvBiaxialCenter(double* worldCoor, double* params, double* motorPos);
+PS_API int transformInvBiaxialCenter(double* worldCoor, double* params, double* motorPos);
 
 /*
 @brief //机械坐标转换至行列坐标

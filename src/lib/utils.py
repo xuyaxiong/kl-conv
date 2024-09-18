@@ -54,11 +54,11 @@ def parse_decl(decl):
     return result
 
 
-def export_comm_and_decl(comm, decl):
-    return f"{comm}\n{decl}"
+def export_comm_and_decl(comm, decl, skip_comm=False):
+    return f"{comm}\n{decl}" if not skip_comm else f"{decl}"
 
 
-def convert(strs):
+def convert(strs, skip_comm=False):
     docstring_list = split_to_docstring(strs)
     result = []
     for docstring in docstring_list:
@@ -66,7 +66,7 @@ def convert(strs):
         if res:
             (comm, decl) = res
             decl = parse_decl(decl)
-            out_str = export_comm_and_decl(comm, decl)
+            out_str = export_comm_and_decl(comm, decl, skip_comm)
             result.append(out_str)
         else:
             continue

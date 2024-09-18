@@ -1,3 +1,4 @@
+import pytest
 from src.lib.utils import (
     convert,
     parse_decl,
@@ -6,18 +7,24 @@ from src.lib.utils import (
 )
 from src.lib.test_data import docstrings, docstring, decl
 
+SKIP = False
 
+
+@pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_convert():
     print(convert(docstrings))
 
 
+@pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_parse_decl():
     print(parse_decl(decl))
 
 
+@pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_split_docstring_to_comm_and_decl():
     print(split_docstring_to_comm_and_decl(docstring))
 
 
+@pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_split_to_docstring():
     print(split_to_docstring(docstrings))

@@ -34,7 +34,7 @@ def split_docstring_to_comm_and_decl(docstring):
 
 
 def parse_decl(decl):
-    result = re.findall(r"(.* )?(.*) (.*)\((.*)\);", decl)[0]
+    result = re.findall(r"(.* )?(\S+)\s+(\S+)\((.*)\);", decl)[0]
     ret_type = result[1]
     func_name = result[2]
     types_str = result[3]

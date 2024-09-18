@@ -55,5 +55,5 @@ int updateTransformParams(double* calib, double* rectify, double* update);
 """
 
 decl = """
-int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
+PS_API  int  transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 """

@@ -1,9 +1,9 @@
 import subprocess
-from src import VERSION
+from src import VERSION, APP_NAME
 
 
 def build_executable():
-    output_name = f"kl_conv_{VERSION}"
+    output_name = f"{APP_NAME}_{VERSION}"
     # PyInstaller 命令参数
     command = [
         "pyinstaller",  # 调用 pyinstaller

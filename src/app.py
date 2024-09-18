@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
-from src import VERSION
+from src import VERSION, APP_NAME
 from src.lib.utils import convert
 
 
@@ -17,11 +17,27 @@ def copy():
     messagebox.showinfo("Tips", "Copied to clipboard!")
 
 
+def show_about():
+    ABOUT = f"version: {VERSION}\nauthor: xuyax\ncontact: xyxlindy@163.com\nrepository: https://github.com/xuyaxiong/kl-conv"
+    messagebox.showinfo("About", ABOUT)
+
+
 root = tk.Tk()
-root.title(f"考拉C++函数声明转换V{VERSION}(xuyax)")
+root.title(f"{APP_NAME}V{VERSION}")
 
 # 设置窗口最大化
 root.state("zoomed")
+
+# 创建菜单栏
+menubar = tk.Menu(root)
+root.config(menu=menubar)
+
+# 创建帮助菜单
+help_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Help", menu=help_menu)
+
+# 添加About菜单项
+help_menu.add_command(label="About", command=show_about)
 
 # 创建Frame放置输入输出区域
 frame = tk.Frame(root)

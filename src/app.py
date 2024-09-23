@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
-from src import VERSION, APP_NAME
+from src import VERSION, APP_NAME, TITLE
 from src.lib.utils import convert
 
 
@@ -23,10 +23,10 @@ def show_about():
 
 
 root = tk.Tk()
-root.title(f"{APP_NAME}V{VERSION}")
+root.title(f"{TITLE}V{VERSION}")
 
-# 设置窗口最大化
-root.state("zoomed")
+# 设置窗口大小
+root.geometry("1200x900")
 
 # 创建菜单栏
 menubar = tk.Menu(root)

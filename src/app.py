@@ -7,7 +7,7 @@ from src.lib.utils import convert
 def submit():
     input_text = input_text_area.get("1.0", tk.END).strip()
     output_text_area.delete("1.0", tk.END)
-    output_text_area.insert(tk.END, convert(input_text) + "\n")
+    output_text_area.insert(tk.END, convert(input_text, checkbox_var.get()) + "\n")
 
 
 def copy():
@@ -56,6 +56,11 @@ output_text_area.pack_propagate(False)
 # 控制面板
 control_frame = tk.Frame(root)
 control_frame.pack()
+
+# 是否输出注释部分
+checkbox_var = tk.BooleanVar()
+checkbox = tk.Checkbutton(control_frame, text="跳过注释", variable=checkbox_var)
+checkbox.pack(side=tk.LEFT, padx=10)
 
 # 提交按钮
 submit_button = tk.Button(control_frame, text="转换", command=submit)

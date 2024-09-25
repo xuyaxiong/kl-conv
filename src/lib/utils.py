@@ -1,5 +1,5 @@
 import re
-from .test_data import docstrings
+from .test_data import docstrings, docstring
 
 type_dict = {
     "unsigned char *": "uchar*",
@@ -7,6 +7,11 @@ type_dict = {
     "const char*": "string",
     "const char *": "string",
 }
+
+
+def preprocess(strs):
+    lines = [line for line in strs.split("\n") if not line.strip().startswith("//")]
+    return "\n".join(lines)
 
 
 def split_to_docstring(strs):
@@ -24,10 +29,14 @@ def split_to_docstring(strs):
 
 def split_docstring_to_comm_and_decl(docstring):
     if docstring != "":
-        groups = re.findall(r"(/\*[\s\S]*\*/\n)?\n?([\s\S]*)", docstring)
-        (comm, decl) = groups[0]
+        parts = re.split(r"(?<=\*/)", docstring)
+        if len(parts) == 2:
+            [comm, decl] = parts
+        else:
+            comm = ""
+            decl = parts[0]
         comm = comm.strip() if comm else ""
-        decl = re.sub(r"[\n\t]", "", decl)
+        decl = re.sub(r"[\n\t]", " ", decl).strip()
         return (comm, decl)
     else:
         return None
@@ -67,6 +76,7 @@ def export_comm_and_decl(comm, decl, skip_comm=False):
 
 
 def convert(strs, skip_comm=False):
+    strs = preprocess(strs)
     docstring_list = split_to_docstring(strs)
     result = []
     for docstring in docstring_list:

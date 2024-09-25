@@ -1,5 +1,6 @@
 import pytest
 from src.lib.utils import (
+    preprocess,
     convert,
     format_comm,
     parse_decl,
@@ -9,6 +10,11 @@ from src.lib.utils import (
 from src.lib.test_data import docstrings, docstring, decl, comm
 
 SKIP = False
+
+
+@pytest.mark.skipif(SKIP, reason="temporary skip")
+def test_preprocess():
+    print(preprocess(docstrings))
 
 
 @pytest.mark.skipif(SKIP, reason="temporary skip")

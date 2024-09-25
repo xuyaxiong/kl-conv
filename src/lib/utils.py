@@ -55,6 +55,13 @@ def parse_decl(decl):
     return result
 
 
+def format_comm(comm):
+    lines = [line.strip() for line in comm.split("\n") if line.strip() != ""]
+    return "\n".join(
+        line if line.startswith(("@", "/*", "*/")) else "\t" + line for line in lines
+    )
+
+
 def export_comm_and_decl(comm, decl, skip_comm=False):
     return f"{comm}\n{decl}" if not skip_comm else f"{decl}"
 
@@ -66,6 +73,7 @@ def convert(strs, skip_comm=False):
         res = split_docstring_to_comm_and_decl(docstring)
         if res:
             (comm, decl) = res
+            comm = format_comm(comm)
             decl = parse_decl(decl)
             out_str = export_comm_and_decl(comm, decl, skip_comm)
             result.append(out_str)

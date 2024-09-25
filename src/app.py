@@ -26,7 +26,7 @@ root = tk.Tk()
 root.title(f"{TITLE}V{VERSION}")
 
 # 设置窗口大小
-root.geometry("1200x900")
+root.geometry("1200x800")
 
 # 创建菜单栏
 menubar = tk.Menu(root)

@@ -42,6 +42,8 @@ int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 @param[out] worldCoor 机械坐标(double[2 * n], x/y坐标)
 */
 int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
+
+DLL_API int getFullTransform(double* calibParams, double* rectifyParams, double* motorPos, double* mapParams, double* transParams = NULL, double* invParams = NULL);
 """
 
 docstring = """

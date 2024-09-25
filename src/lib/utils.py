@@ -41,6 +41,7 @@ def parse_decl(decl):
     params_decl = [type_str.strip() for type_str in types_str.split(",")]
     type_arr = []
     for param_decl in params_decl:
+        param_decl = param_decl.split("=")[0].strip()
         (type, _) = re.findall(r"(.*[*\s])(.*)", param_decl)[0]
         type = type.strip()
         type = type_dict.get(type) or type

@@ -9,6 +9,34 @@ type_dict = {
 }
 
 
+def strip_header_file(header_str):
+    in_target = False  # 是否目标行
+    in_comm = False  # 是否为注释
+    curly_braces = []
+    target_lines = []
+    for line in header_str.splitlines():
+        if 'export "C" {' in line:
+            in_target = True
+            curly_braces.append("{")
+            continue
+        if in_target:
+            target_lines.append(line)
+            if "/*" in line:
+                in_comm = True
+            if "*/" in line:
+                in_comm = False
+            if not in_comm:
+                for ch in line:
+                    if ch == "{":
+                        curly_braces.append(ch)
+                    if ch == "}":
+                        curly_braces.pop()
+                    if len(curly_braces) == 0:
+                        in_target = False
+    strs = "\n".join(target_lines[:-1])
+    return strs
+
+
 def preprocess(strs):
     lines = [line for line in strs.split("\n") if not line.strip().startswith("//")]
     return "\n".join(lines)

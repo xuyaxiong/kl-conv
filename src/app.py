@@ -1,7 +1,16 @@
 import tkinter as tk
-from tkinter import scrolledtext, messagebox
+from tkinter import scrolledtext, messagebox, filedialog
 from src import VERSION, APP_NAME, TITLE
-from src.lib.utils import convert
+from src.lib.utils import strip_header_file, convert
+
+
+def choose_file():
+    file_path = filedialog.askopenfilename()
+    with open(file_path, "r", encoding="utf8") as f:
+        data = f.read()
+        striped_header_file = strip_header_file(data)
+        input_text_area.delete("1.0", tk.END)
+        input_text_area.insert(tk.END, striped_header_file)
 
 
 def submit():
@@ -56,6 +65,10 @@ output_text_area.pack_propagate(False)
 # 控制面板
 control_frame = tk.Frame(root)
 control_frame.pack()
+
+# 选择头文件
+choose_file_button = tk.Button(control_frame, text="选择头文件", command=choose_file)
+choose_file_button.pack(side=tk.LEFT, padx=10)
 
 # 是否输出注释部分
 checkbox_var = tk.BooleanVar()

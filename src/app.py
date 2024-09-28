@@ -1,16 +1,15 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
 from src import VERSION, APP_NAME, TITLE
-from src.lib.utils import strip_header_file, convert
+from src.lib.utils import get_file_content, strip_header_file, convert
 
 
 def choose_file():
     file_path = filedialog.askopenfilename()
-    with open(file_path, "r", encoding="utf8") as f:
-        data = f.read()
-        striped_header_file = strip_header_file(data)
-        input_text_area.delete("1.0", tk.END)
-        input_text_area.insert(tk.END, striped_header_file)
+    data = get_file_content(file_path)
+    striped_header_file = strip_header_file(data)
+    input_text_area.delete("1.0", tk.END)
+    input_text_area.insert(tk.END, striped_header_file)
 
 
 def submit():

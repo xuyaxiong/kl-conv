@@ -1,4 +1,5 @@
 import re
+import chardet
 from .test_data import docstrings, docstring
 
 type_dict = {
@@ -7,6 +8,16 @@ type_dict = {
     "const char*": "string",
     "const char *": "string",
 }
+
+
+def get_file_content(path):
+    with open(path, "rb") as f:
+        data = f.read()
+        res = chardet.detect(data)
+        encoding = res["encoding"]
+    with open(path, "r", encoding=encoding) as f:
+        data = f.read()
+    return data
 
 
 def strip_header_file(header_str):

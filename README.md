@@ -9,7 +9,7 @@ python -m venv venv
 venv\Scripts\activate
 # 3. 安装依赖
 pip install -r requirements.txt
-# 4. 执行打包指令
+# 4. 执行打包指令，会输出GUI和命令行两个工具
 python setup.py
 ```
 

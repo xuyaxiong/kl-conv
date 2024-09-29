@@ -19,7 +19,7 @@ python setup.py
 pytest
 ```
 
-## 3. 示例
+## 3. 输入/输出示例
 
 - 3.1 输入
 
@@ -118,4 +118,17 @@ transformInvMapping: ['int', ['int', 'double*', 'double*', 'double*']],
 
 
 getFullTransform: ['int', ['double*', 'double*', 'double*', 'double*', 'double*', 'double*']],
+```
+
+## 4. 用法
+
+- 4.1 命令行
+
+```bash
+# kl_conv_cli_xxx.exe
+# --cli                 该选项是必需的
+# -f="<input_path>"     该选项是必需的
+# -o='<output_path>'    该选项可选，默认为当前目录
+# -n='<output_name>'    该选项可选，默认为xxx
+kl_conv_cli_xxx.exe --cli -f="./PS_DLL.h" -o="." -n="test"
 ```

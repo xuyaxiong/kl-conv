@@ -12,13 +12,13 @@ def run_command_line_mode(args):
     elif args.f:
         input_path = args.f
         output_path = args.o or "."
-        output_name = args.n or "xxxDll"
+        output_name = args.n or "xxx"
         data = get_file_content(input_path)
         striped_header_file = strip_header_file(data)
         content = convert(striped_header_file)
         res = fill_template(output_name, content)
         output_path = os.path.join(output_path, f"{output_name}.ts")
-        with open(output_path, "w") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(res)
 
 

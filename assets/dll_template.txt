@@ -4,7 +4,8 @@ const DLL_PATH = 'D:\\kl-storage\\dll\\';
 
 const dll = () => {
   return new Library(path.join(DLL_PATH, '$DLL_NAME$'), {
-    $CONTENT$
+    
+$CONTENT$
   });
 };
 const $DLL_NAME$Dll = dll();

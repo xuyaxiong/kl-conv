@@ -167,8 +167,14 @@ def get_static_file_path(filename):
     return os.path.join(base_path, "assets", filename)
 
 
+def padding_left(strs, n):
+    padding = " " * n
+    return "\n".join([f"{padding}{line}" for line in strs.split("\n")])
+
+
 def fill_template(dll_name, content):
     dll_temp_path = get_static_file_path("dll_template.txt")
+    content = padding_left(content, 4)
     with open(dll_temp_path, "r") as f:
         data = f.read()
         data = data.replace("$DLL_NAME$", dll_name)

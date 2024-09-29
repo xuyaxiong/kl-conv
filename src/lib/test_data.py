@@ -107,3 +107,14 @@ formated_comm = """/*
 parsed_decl = (
     """transformInvBiaxialCenter: ['int', ['double*', 'double*', 'double*']]"""
 )
+
+formated_docstring = """
+/*
+@brief //机械坐标转换至行列坐标
+@param[in] n 需转换坐标数量
+@param[in] worldCoor 机械坐标(double[2 * n], x/y坐标)
+@param[in] params 投影矩阵(double[9])
+@param[out] mapCoor 行列坐标(double[2 * n], 列/行坐标)
+*/
+transformMapping: ['int', ['int', 'double*', 'double*', 'double*']],
+"""

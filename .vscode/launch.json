@@ -12,11 +12,19 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Python: app",
+      "name": "Python: app-gui",
       "type": "debugpy",
       "request": "launch",
       "module": "src.app",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: app-cli",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.app",
+      "console": "integratedTerminal",
+      "args": ["--cli", "-f", "./assets/PS_DLL.h"]
     }
   ]
 }

@@ -1,6 +1,8 @@
+import os
+import sys
 import re
 import chardet
-from .test_data import docstrings, docstring
+from .test_data import docstrings, docstring, formated_docstring
 
 type_dict = {
     "unsigned char *": "uchar*",
@@ -153,6 +155,25 @@ def convert(strs, skip_comm=False):
         else:
             continue
     return "".join(result)
+
+
+def get_static_file_path(filename):
+    if getattr(sys, "frozen", False):
+        # 如果程序被打包
+        base_path = sys._MEIPASS
+    else:
+        # 如果在开发环境中运行
+        base_path = os.path.join(os.path.dirname(__file__), "../..")
+    return os.path.join(base_path, "assets", filename)
+
+
+def fill_template(dll_name, content):
+    dll_temp_path = get_static_file_path("dll_template.txt")
+    with open(dll_temp_path, "r") as f:
+        data = f.read()
+        data = data.replace("$DLL_NAME$", dll_name)
+        data = data.replace("$CONTENT$", content)
+        return data
 
 
 if __name__ == "__main__":

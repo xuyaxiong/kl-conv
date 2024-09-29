@@ -7,6 +7,7 @@ from src.lib.utils import (
     format_comm,
     parse_decl,
     export_comm_and_decl,
+    fill_template,
 )
 from src.lib.test_data import (
     docstrings,
@@ -15,6 +16,7 @@ from src.lib.test_data import (
     comm,
     parsed_decl,
     formated_comm,
+    formated_docstring,
 )
 
 SKIP = False
@@ -54,3 +56,8 @@ def test_split_to_docstring():
 def test_export_comm_and_decl():
     print(export_comm_and_decl(formated_comm, parsed_decl, False))
     print(export_comm_and_decl(formated_comm, parsed_decl, True))
+
+
+@pytest.mark.skipif(SKIP, reason="temporary skip")
+def test_fill_template():
+    print(fill_template("testDll", formated_docstring))

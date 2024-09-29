@@ -1,12 +1,25 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
+import os
 import argparse
 from src import VERSION, APP_NAME, TITLE
-from src.lib.utils import get_file_content, strip_header_file, convert
+from src.lib.utils import get_file_content, strip_header_file, convert, fill_template
 
 
-def run_command_line_mode(input):
-    print(convert(input))
+def run_command_line_mode(args):
+    if args.docstrings:
+        print(convert(args.docstrings))
+    elif args.f:
+        input_path = args.f
+        output_path = args.o or "."
+        output_name = args.n or "xxxDll"
+        data = get_file_content(input_path)
+        striped_header_file = strip_header_file(data)
+        content = convert(striped_header_file)
+        res = fill_template(output_name, content)
+        output_path = os.path.join(output_path, f"{output_name}.ts")
+        with open(output_path, "w") as f:
+            f.write(res)
 
 
 def run_gui_mode():
@@ -96,9 +109,15 @@ def run_gui_mode():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=str, help="the docstrings you want to convert")
+    parser.add_argument("--cli", action="store_true", help="start in command-line mode")
+    parser.add_argument(
+        "--docstrings", type=str, help="the docstrings you want to convert"
+    )
+    parser.add_argument("-f", type=str, help="the header file path you want to convert")
+    parser.add_argument("-o", type=str, help="the output file path")
+    parser.add_argument("-n", type=str, help="the output file name")
     args = parser.parse_args()
-    if args.input:
-        run_command_line_mode(args.input)
+    if args.cli:
+        run_command_line_mode(args)
     else:
         run_gui_mode()

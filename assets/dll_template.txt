@@ -1,0 +1,11 @@
+import { Library } from 'ffi-napi';
+const path = require('path');
+const DLL_PATH = 'D:\\kl-storage\\dll\\';
+
+const dll = () => {
+  return new Library(path.join(DLL_PATH, '$DLL_NAME$'), {
+    $CONTENT$
+  });
+};
+const $DLL_NAME$Dll = dll();
+export default $DLL_NAME$Dll;

@@ -23,6 +23,7 @@ def build_executable(is_gui=True):
         "pyinstaller",  # 调用 pyinstaller
         "--onefile",  # 将所有文件打包成一个可执行文件
         "--windowed" if is_gui else "--console",
+        "--add-data=assets:assets",
         f"--name={output_name}",  # 指定生成的可执行文件名称
         "./src/app.py",  # 要打包的 Python 文件
     ]

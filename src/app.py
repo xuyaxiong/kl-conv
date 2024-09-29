@@ -1,6 +1,6 @@
-import argparse
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
+import argparse
 from src import VERSION, APP_NAME, TITLE
 from src.lib.utils import get_file_content, strip_header_file, convert
 
@@ -11,7 +11,12 @@ def run_command_line_mode(input):
 
 def run_gui_mode():
     def choose_file():
-        file_path = filedialog.askopenfilename()
+        file_path = filedialog.askopenfilename(
+            title="选择头文件",
+            filetypes=[("Header Files", "*.h")],
+        )
+        if file_path == "":
+            return
         data = get_file_content(file_path)
         striped_header_file = strip_header_file(data)
         input_text_area.delete("1.0", tk.END)

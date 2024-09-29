@@ -47,7 +47,7 @@ def run_gui_mode():
         messagebox.showinfo("Tips", "Copied to clipboard!")
 
     def show_about():
-        ABOUT = f"version: {VERSION}\nauthor: xuyax\ncontact: xyxlindy@163.com\nrepository: https://github.com/xuyaxiong/kl-conv"
+        ABOUT = f"version: {VERSION}\nauthor: xuyax\ncontact: xyxlindy@163.com\nrepo: https://github.com/xuyaxiong/kl-conv"
         messagebox.showinfo("About", ABOUT)
 
     root = tk.Tk()
@@ -82,7 +82,7 @@ def run_gui_mode():
     output_text_area.pack_propagate(False)
 
     # 控制面板
-    control_frame = tk.Frame(root)
+    control_frame = tk.Frame(root, padx=10, pady=10)
     control_frame.pack()
 
     # 选择头文件
@@ -97,7 +97,9 @@ def run_gui_mode():
     checkbox.pack(side=tk.LEFT, padx=10)
 
     # 提交按钮
-    submit_button = tk.Button(control_frame, text="转换", command=submit)
+    submit_button = tk.Button(
+        control_frame, text="转换", command=submit, bg="#3498db", fg="white"
+    )
     submit_button.pack(side=tk.LEFT, padx=10)
 
     # 复制转换结果按钮

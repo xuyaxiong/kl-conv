@@ -20,18 +20,24 @@ def get_file_content(path):
     return data
 
 
+def is_comm(str):
+    return re.search(r"/\*[\s\S]*?\*/", str)
+
+
 def strip_header_file(header_str):
     in_target = False  # 是否目标行
     in_comm = False  # 是否为注释
     curly_braces = []
     target_lines = []
     for line in header_str.splitlines():
-        if 'export "C" {' in line:
+        if 'extern "C" {' in line:
             in_target = True
             curly_braces.append("{")
             continue
         if in_target:
-            target_lines.append(line)
+            if "#endif" in line or "#ifdef" in line:
+                continue
+            target_lines.append(line.strip())
             if "/*" in line:
                 in_comm = True
             if "*/" in line:
@@ -57,7 +63,7 @@ def split_to_docstring(strs):
     docstring_list = [
         item[0]
         for item in re.findall(
-            r"((/\*[\s\S]*?\*/\s*)?(\w*\s*)?\w*\s*\w+\(.*?\);)", strs
+            r"((/\*[\s\S]*?\*/\s*)?((\w*\s*)?\w*\s*\w+\(.*?\);)?)", strs
         )
     ]
     arr = [
@@ -72,9 +78,14 @@ def split_docstring_to_comm_and_decl(docstring):
         if len(parts) == 2:
             [comm, decl] = parts
         else:
-            comm = ""
-            decl = parts[0]
-        comm = comm.strip() if comm else ""
+            first_part = parts[0]
+            if is_comm(first_part):
+                comm = first_part
+                decl = ""
+            else:
+                comm = ""
+                decl = first_part
+        comm = comm.strip()
         decl = re.sub(r"[\n\t]", " ", decl).strip()
         return (comm, decl)
     else:
@@ -123,7 +134,7 @@ def convert(strs, skip_comm=False):
         if res:
             (comm, decl) = res
             comm = format_comm(comm)
-            decl = parse_decl(decl)
+            decl = parse_decl(decl) if decl != "" else ""
             out_str = export_comm_and_decl(comm, decl, skip_comm)
             result.append(out_str)
         else:

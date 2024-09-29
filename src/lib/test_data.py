@@ -91,3 +91,19 @@ comm = """
 decl = """
 PS_API  int  transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 """
+
+formated_comm = """/*
+@brief
+@param[in] markId 两个点的顺序，0-左上，1-右上，2-右下，3-左下(int[2])
+@param[in] markCoor 检测区域定位mark的机械坐标(double[4]：x/y, 
+    左上[0/1], 右上[2/3])
+@param[in] calibParams 像素标定参数
+@param[in] rotateCenter 载台旋转中心(double[2]:x/y)
+@param[in] refCoor 定位建模时两个定位模版的世界坐标(double[4], 手动时为null)
+@param[in/out] rectifyParams 坐标变换矩阵(double[9]，手动时为新坐标double[4])
+@param[out] angle 载台旋转角度(double[1])
+*/"""
+
+parsed_decl = (
+    """transformInvBiaxialCenter: ['int', ['double*', 'double*', 'double*']]"""
+)

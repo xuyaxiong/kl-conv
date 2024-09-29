@@ -59,7 +59,7 @@ def preprocess(strs):
     return "\n".join(lines)
 
 
-def split_to_docstring(strs):
+def split_to_docstring_list(strs):
     docstring_list = [
         item[0]
         for item in re.findall(
@@ -122,12 +122,25 @@ def format_comm(comm):
 
 
 def export_comm_and_decl(comm, decl, skip_comm=False):
-    return f"{comm}\n{decl}" if not skip_comm else f"{decl}"
+    if not skip_comm:
+        if comm != "" and decl != "":
+            return f"{comm}\n{decl},\n\n"
+        elif comm != "":
+            return f"{comm}\n"
+        else:
+            return f"{decl},\n\n"
+    else:
+        if comm != "" and decl != "":
+            return f"{decl},\n\n"
+        elif comm != "":
+            return ""
+        else:
+            return f"{decl},\n\n"
 
 
 def convert(strs, skip_comm=False):
     strs = preprocess(strs)
-    docstring_list = split_to_docstring(strs)
+    docstring_list = split_to_docstring_list(strs)
     result = []
     for docstring in docstring_list:
         res = split_docstring_to_comm_and_decl(docstring)
@@ -139,8 +152,8 @@ def convert(strs, skip_comm=False):
             result.append(out_str)
         else:
             continue
-    return ",\n\n".join(result) + ","
+    return "".join(result)
 
 
 if __name__ == "__main__":
-    print(split_to_docstring(docstrings))
+    print(split_to_docstring_list(docstrings))

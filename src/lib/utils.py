@@ -166,6 +166,17 @@ def convert(strs, skip_comm=False):
     return "".join(result)
 
 
+def convert_file(input_path, output_path, output_name, skip_comm=False):
+    """读取头文件并且输出转换后的文件"""
+    data = get_file_content(input_path)
+    striped_header_file = strip_header_file(data)
+    content = convert(striped_header_file, skip_comm)
+    res = fill_template(output_name, content)
+    output_path = os.path.join(output_path, f"{output_name}.ts")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(res)
+
+
 def get_static_file_path(filename):
     """获取静态资源路径"""
     if getattr(sys, "frozen", False):

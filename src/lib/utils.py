@@ -2,7 +2,7 @@ import os
 import sys
 import re
 import chardet
-from .test_data import docstrings, docstring, formated_docstring
+from .test_data import docstrings, docstring, formatted_docstring
 
 type_dict = {
     "unsigned char *": "uchar*",
@@ -12,21 +12,26 @@ type_dict = {
 }
 
 
+def detect_encoding(str):
+    """侦测字符编码格式"""
+    return chardet.detect(str)["encoding"]
+
+
 def get_file_content(path):
+    """用正确的编码格式打开文件"""
     with open(path, "rb") as f:
         data = f.read()
-        res = chardet.detect(data)
-        encoding = res["encoding"]
-    with open(path, "r", encoding=encoding) as f:
-        data = f.read()
-    return data
+    with open(path, "r", encoding=detect_encoding(data)) as f:
+        return f.read()
 
 
 def is_comm(str):
+    """是否为注释"""
     return re.search(r"/\*[\s\S]*?\*/", str)
 
 
 def strip_header_file(header_str):
+    """从头文件中截取导出函数部分"""
     in_target = False  # 是否目标行
     in_comm = False  # 是否为注释
     curly_braces = []
@@ -75,6 +80,7 @@ def split_to_docstring_list(strs):
 
 
 def split_docstring_to_comm_and_decl(docstring):
+    """将字符串分割成注释和函数声明两部分"""
     if docstring != "":
         parts = re.split(r"(?<=\*/)", docstring)
         if len(parts) == 2:
@@ -95,6 +101,7 @@ def split_docstring_to_comm_and_decl(docstring):
 
 
 def parse_decl(decl):
+    """解析函数声明"""
     result = re.findall(r"(.* )?(\S+)\s+(\S+)\((.*)\);", decl)[0]
     ret_type = result[1]
     func_name = result[2]
@@ -117,6 +124,7 @@ def parse_decl(decl):
 
 
 def format_comm(comm):
+    """格式化注释"""
     lines = [line.strip() for line in comm.split("\n") if line.strip() != ""]
     return "\n".join(
         line if line.startswith(("@", "/*", "*/")) else "\t" + line for line in lines
@@ -124,6 +132,7 @@ def format_comm(comm):
 
 
 def export_comm_and_decl(comm, decl, skip_comm=False):
+    """导出注释和函数声明"""
     if not skip_comm:
         if comm != "" and decl != "":
             return f"{comm}\n{decl},\n\n"
@@ -158,6 +167,7 @@ def convert(strs, skip_comm=False):
 
 
 def get_static_file_path(filename):
+    """获取静态资源路径"""
     if getattr(sys, "frozen", False):
         # 如果程序被打包
         base_path = sys._MEIPASS
@@ -168,11 +178,13 @@ def get_static_file_path(filename):
 
 
 def padding_left(strs, n):
+    """在多行字符串左侧填充空格符"""
     padding = " " * n
     return "\n".join([f"{padding}{line}" for line in strs.split("\n")])
 
 
 def fill_template(dll_name, content):
+    """填充模板"""
     dll_temp_path = get_static_file_path("dll_template.txt")
     content = padding_left(content, 4)
     with open(dll_temp_path, "r") as f:

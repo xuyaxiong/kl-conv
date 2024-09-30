@@ -15,8 +15,8 @@ from src.lib.test_data import (
     decl,
     comm,
     parsed_decl,
-    formated_comm,
-    formated_docstring,
+    formatted_comm,
+    formatted_docstring,
 )
 
 SKIP = False
@@ -54,10 +54,10 @@ def test_split_to_docstring():
 
 @pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_export_comm_and_decl():
-    print(export_comm_and_decl(formated_comm, parsed_decl, False))
-    print(export_comm_and_decl(formated_comm, parsed_decl, True))
+    print(export_comm_and_decl(formatted_comm, parsed_decl, False))
+    print(export_comm_and_decl(formatted_comm, parsed_decl, True))
 
 
 @pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_fill_template():
-    print(fill_template("testDll", formated_docstring))
+    print(fill_template("testDll", formatted_docstring))

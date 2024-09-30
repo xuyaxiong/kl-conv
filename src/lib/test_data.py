@@ -92,7 +92,7 @@ decl = """
 PS_API  int  transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 """
 
-formated_comm = """/*
+formatted_comm = """/*
 @brief
 @param[in] markId 两个点的顺序，0-左上，1-右上，2-右下，3-左下(int[2])
 @param[in] markCoor 检测区域定位mark的机械坐标(double[4]：x/y, 
@@ -108,7 +108,7 @@ parsed_decl = (
     """transformInvBiaxialCenter: ['int', ['double*', 'double*', 'double*']]"""
 )
 
-formated_docstring = """
+formatted_docstring = """
 /*
 @brief //机械坐标转换至行列坐标
 @param[in] n 需转换坐标数量

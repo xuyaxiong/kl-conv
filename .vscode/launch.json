@@ -12,19 +12,30 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Python: app-gui",
+      "name": "Python: gui",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.mode.gui",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: cli",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "src.mode.cli",
+      "console": "integratedTerminal",
+      "args": [
+        "--cli",
+        "-f",
+        "./assets/PS_DLL.h"
+      ]
+    },
+    {
+      "name": "Python: app",
       "type": "debugpy",
       "request": "launch",
       "module": "src.app",
       "console": "integratedTerminal"
     },
-    {
-      "name": "Python: app-cli",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "src.app",
-      "console": "integratedTerminal",
-      "args": ["--cli", "-f", "./assets/PS_DLL.h"]
-    }
   ]
 }

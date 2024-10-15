@@ -100,8 +100,14 @@ def split_docstring_to_comm_and_decl(docstring):
         return None
 
 
+def remove_extra_spaces(text):
+    """将多个空白字符替换为单个空格"""
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def parse_decl(decl):
     """解析函数声明"""
+    decl = remove_extra_spaces(decl)
     result = re.findall(r"(.* )?(\S+)\s+(\S+)\((.*)\);", decl)[0]
     ret_type = result[1]
     func_name = result[2]

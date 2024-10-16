@@ -1,6 +1,11 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox, filedialog
-from src.lib.utils import get_file_content, strip_header_file, convert
+from src.lib.utils import (
+    get_file_content,
+    strip_header_file,
+    convert,
+    write_content_to_template,
+)
 from src import VERSION, APP_NAME, TITLE
 
 
@@ -68,6 +73,10 @@ class GUI:
         copy_button = tk.Button(control_frame, text="复制", command=self.copy)
         copy_button.pack(side=tk.LEFT, padx=10)
 
+        # 导出按钮
+        export_button = tk.Button(control_frame, text="导出", command=self.export)
+        export_button.pack(side=tk.LEFT, padx=10)
+
     def choose_file(self):
         file_path = filedialog.askopenfilename(
             title="选择头文件",
@@ -92,6 +101,14 @@ class GUI:
         self.root.clipboard_clear()
         self.root.clipboard_append(output_text)
         messagebox.showinfo("Tips", "Copied to clipboard!")
+
+    def export(self):
+        output_text = self.output_text_area.get("1.0", tk.END).strip()
+        if output_text == "":
+            messagebox.showinfo("Tips", "You should complete the conversion first!")
+        else:
+            output_path = write_content_to_template(output_text, ".", "xxx")
+            messagebox.showinfo("Tips", f"Conversion completed!\n{output_path}")
 
     def show_about(self):
         ABOUT = f"version: {VERSION}\nauthor: xuyax\ncontact: xyxlindy@163.com\nrepo: https://github.com/xuyaxiong/kl-conv"

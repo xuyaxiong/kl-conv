@@ -57,11 +57,6 @@ def strip_header_file(header_str):
     return strs
 
 
-def preprocess(strs):
-    lines = [line for line in strs.split("\n") if not line.strip().startswith("//")]
-    return "\n".join(lines)
-
-
 def remove_extra_spaces(text):
     """将多个空白字符替换为单个空格"""
     return re.sub(r"\s+", " ", text).strip()
@@ -96,14 +91,6 @@ def parse_decl(decl):
     return result
 
 
-def format_comm(comm):
-    """格式化注释"""
-    lines = [line.strip() for line in comm.split("\n") if line.strip() != ""]
-    return "\n".join(
-        line if line.startswith(("@", "/*", "*/")) else "\t" + line for line in lines
-    )
-
-
 def export_comm_and_decl(comm, decl, skip_comm=False):
     """导出注释和函数声明"""
     if not skip_comm:
@@ -131,6 +118,7 @@ def remove_single_line_comm(docstrings):
     ]
     return "\n".join(lines)
 
+
 def remove_multiline_comm(docstrings):
     """移除多行注释"""
     total_len = len(docstrings)
@@ -155,7 +143,9 @@ def remove_multiline_comm(docstrings):
         i += 1
     return acc
 
+
 def remove_comm(docstrings):
+    """移除所有注释"""
     docstrings = remove_single_line_comm(docstrings)
     return remove_multiline_comm(docstrings)
 
@@ -174,8 +164,16 @@ def get_export_key_from_docstrings(docstrings):
 
 def convert(docstrings, skip_comm=False):
     export_key = get_export_key_from_docstrings(docstrings)
-    docstrings = preprocess(docstrings)
     return replace_all_decls(docstrings, export_key, skip_comm)
+
+
+def write_content_to_template(content, output_path, output_name):
+    """将转换后的内容填充到模板后导出至文件"""
+    res = fill_template(output_name, content)
+    output_path = os.path.join(output_path, f"{output_name}.ts")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(res)
+    return os.path.abspath(output_path)
 
 
 def convert_file(input_path, output_path, output_name, skip_comm=False):
@@ -183,10 +181,7 @@ def convert_file(input_path, output_path, output_name, skip_comm=False):
     data = get_file_content(input_path)
     striped_header_file = strip_header_file(data)
     content = convert(striped_header_file, skip_comm)
-    res = fill_template(output_name, content)
-    output_path = os.path.join(output_path, f"{output_name}.ts")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(res)
+    write_content_to_template(content, output_path, output_name)
 
 
 def get_static_file_path(filename):
@@ -219,6 +214,7 @@ def fill_template(dll_name, content):
 
 def replace_all_decls(docstrings, export_key, skip_comm):
     """转化函数声明并替换"""
+
     def process(match):
         return parse_decl(match.group()) + ","
 

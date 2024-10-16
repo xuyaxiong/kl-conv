@@ -5,9 +5,7 @@ from src.lib.utils import convert, convert_file
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cli", action="store_true", help="start in command-line mode")
-    parser.add_argument(
-        "--docstrings", type=str, help="the docstrings you want to convert"
-    )
+    parser.add_argument("--strs", type=str, help="the strs you want to convert")
     parser.add_argument("-f", type=str, help="the header file path you want to convert")
     parser.add_argument("-o", type=str, help="the output file path")
     parser.add_argument("-n", type=str, help="the output file name")
@@ -15,8 +13,8 @@ def get_args():
 
 
 def run_cli_mode(args):
-    if args.docstrings:
-        print(convert(args.docstrings))
+    if args.strs:
+        print(convert(args.strs))
     elif args.f:
         input_path = args.f
         output_path = args.o or "."

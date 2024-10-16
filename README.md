@@ -24,7 +24,7 @@ pytest
 - 3.1 输入
 
 ```C++
-int updateTransformParams(double* calib, double* rectify, double* update);
+PS_API int updateTransformParams(double* calib, double* rectify, double* update);
 
 /*
 @brief //图像坐标转换至机械坐标
@@ -44,7 +44,7 @@ PS_API int transformBiaxial(int n, double* imgCoor, double* params, double* moto
 @param[in] motorPos 采图时的x/y轴位置读数(double[2])
 @param[out] imgCoor 图像坐标(double[2 * n], x/y坐标)
 */
-int transformInvBiaxial(int n, double* worldCoor, double* params, double* motorPos, double* imgCoor);
+PS_API int transformInvBiaxial(int n, double* worldCoor, double* params, double* motorPos, double* imgCoor);
 
 
 PS_API int transformInvBiaxialCenter(double* worldCoor, double* params, double* motorPos);
@@ -56,7 +56,7 @@ PS_API int transformInvBiaxialCenter(double* worldCoor, double* params, double* 
 @param[in] params 投影矩阵(double[9])
 @param[out] mapCoor 行列坐标(double[2 * n], 列/行坐标)
 */
-int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
+PS_API int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 
 /*
 @brief //行列坐标反变换至机械坐标
@@ -65,9 +65,9 @@ int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 @param[in] params 投影矩阵(double[9], 正变换矩阵)
 @param[out] worldCoor 机械坐标(double[2 * n], x/y坐标)
 */
-int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
+PS_API int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 
-DLL_API int getFullTransform(double* calibParams, double* rectifyParams, double* motorPos, double* mapParams, double* transParams = NULL, double* invParams = NULL);
+PS_API int getFullTransform(double* calibParams, double* rectifyParams, double* motorPos, double* mapParams, double* transParams = NULL, double* invParams = NULL);
 ```
 
 - 3.2 输出
@@ -116,7 +116,6 @@ transformMapping: ['int', ['int', 'double*', 'double*', 'double*']],
 */
 transformInvMapping: ['int', ['int', 'double*', 'double*', 'double*']],
 
-
 getFullTransform: ['int', ['double*', 'double*', 'double*', 'double*', 'double*', 'double*']],
 ```
 
@@ -132,3 +131,9 @@ getFullTransform: ['int', ['double*', 'double*', 'double*', 'double*', 'double*'
 # -n='<output_name>'    该选项可选，默认为xxx
 kl_conv_cli_xxx.exe --cli -f="./PS_DLL.h" -o="." -n="test"
 ```
+
+## 5. 软件截图
+- 5.1 GUI模式截图
+![GUI模式](./assets/GUI模式截图.png "GUI模式")
+- 5.2 CLI模式截图
+![CLI模式](./assets/CLI模式截图.png "CLI模式")

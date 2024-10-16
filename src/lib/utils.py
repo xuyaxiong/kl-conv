@@ -3,7 +3,7 @@ import sys
 import re
 import chardet
 from collections import Counter
-from .test_data import docstrings, docstring, formatted_docstring
+from .test_data import docstrings
 
 type_dict = {
     "unsigned char *": "uchar*",
@@ -89,24 +89,6 @@ def parse_decl(decl):
     func_decl_content = f"[{', '.join([ret_type_str, type_arr_str])}]"
     result = f"{func_name}: {func_decl_content}"
     return result
-
-
-def export_comm_and_decl(comm, decl, skip_comm=False):
-    """导出注释和函数声明"""
-    if not skip_comm:
-        if comm != "" and decl != "":
-            return f"{comm}\n{decl},\n\n"
-        elif comm != "":
-            return f"{comm}\n"
-        else:
-            return f"{decl},\n\n"
-    else:
-        if comm != "" and decl != "":
-            return f"{decl},\n\n"
-        elif comm != "":
-            return ""
-        else:
-            return f"{decl},\n\n"
 
 
 def remove_single_line_comm(docstrings):

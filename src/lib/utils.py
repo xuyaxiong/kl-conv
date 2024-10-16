@@ -2,6 +2,7 @@ import os
 import sys
 import re
 import chardet
+from collections import Counter
 from .test_data import docstrings, docstring, formatted_docstring
 
 type_dict = {
@@ -23,11 +24,6 @@ def get_file_content(path):
         data = f.read()
     with open(path, "r", encoding=detect_encoding(data)) as f:
         return f.read()
-
-
-def is_comm(str):
-    """是否为注释"""
-    return re.search(r"/\*[\s\S]*?\*/", str)
 
 
 def strip_header_file(header_str):
@@ -66,40 +62,6 @@ def preprocess(strs):
     return "\n".join(lines)
 
 
-def split_to_docstring_list(strs):
-    docstring_list = [
-        item[0]
-        for item in re.findall(
-            r"((/\*[\s\S]*?\*/\s*)?((\w*\s*)?\w*\s*\w+\(.*?\);)?)", strs
-        )
-    ]
-    arr = [
-        docstring.strip() for docstring in docstring_list if len(docstring.strip()) > 0
-    ]
-    return arr
-
-
-def split_docstring_to_comm_and_decl(docstring):
-    """将字符串分割成注释和函数声明两部分"""
-    if docstring != "":
-        parts = re.split(r"(?<=\*/)", docstring)
-        if len(parts) == 2:
-            [comm, decl] = parts
-        else:
-            first_part = parts[0]
-            if is_comm(first_part):
-                comm = first_part
-                decl = ""
-            else:
-                comm = ""
-                decl = first_part
-        comm = comm.strip()
-        decl = re.sub(r"[\n\t]", " ", decl).strip()
-        return (comm, decl)
-    else:
-        return None
-
-
 def remove_extra_spaces(text):
     """将多个空白字符替换为单个空格"""
     return re.sub(r"\s+", " ", text).strip()
@@ -108,19 +70,24 @@ def remove_extra_spaces(text):
 def parse_decl(decl):
     """解析函数声明"""
     decl = remove_extra_spaces(decl)
-    result = re.findall(r"(.* )?(\S+)\s+(\S+)\((.*)\);", decl)[0]
+    result = re.findall(r"(\S+)\s(\S+)\s([^\(]+)\((.*)\);", decl)[0]
     ret_type = result[1]
     func_name = result[2]
     types_str = result[3]
-    params_decl = [type_str.strip() for type_str in types_str.split(",")]
-    type_arr = []
-    for param_decl in params_decl:
-        param_decl = param_decl.split("=")[0].strip()
-        (type, _) = re.findall(r"(.*[*\s])(.*)", param_decl)[0]
-        type = type.strip()
-        type = type_dict.get(type) or type
-        type_str = f"'{type}'"
-        type_arr.append(type_str)
+    try:
+        params_decl = [type_str.strip() for type_str in types_str.split(",")]
+        type_arr = []
+        for param_decl in params_decl:
+            param_decl = param_decl.split("=")[0].strip()
+            if param_decl == "":
+                continue
+            (type, _) = re.findall(r"(.*[*\s])(.*)", param_decl)[0]
+            type = type.strip()
+            type = type_dict.get(type) or type
+            type_str = f"'{type}'"
+            type_arr.append(type_str)
+    except:
+        type_arr = [f"'something went wrong'"]
 
     type_arr_str = f"[{', '.join(type_arr)}]"
     ret_type_str = f"'{ret_type}'"
@@ -155,21 +122,60 @@ def export_comm_and_decl(comm, decl, skip_comm=False):
             return f"{decl},\n\n"
 
 
-def convert(strs, skip_comm=False):
-    strs = preprocess(strs)
-    docstring_list = split_to_docstring_list(strs)
-    result = []
-    for docstring in docstring_list:
-        res = split_docstring_to_comm_and_decl(docstring)
-        if res:
-            (comm, decl) = res
-            comm = format_comm(comm)
-            decl = parse_decl(decl) if decl != "" else ""
-            out_str = export_comm_and_decl(comm, decl, skip_comm)
-            result.append(out_str)
+def remove_single_line_comm(docstrings):
+    """移除双斜杠注释"""
+    lines = [
+        remove_extra_spaces(line)
+        for line in docstrings.split("\n")
+        if not remove_extra_spaces(line).startswith("//")
+    ]
+    return "\n".join(lines)
+
+def remove_multiline_comm(docstrings):
+    """移除多行注释"""
+    total_len = len(docstrings)
+    i = 0
+    in_comm = False
+    acc = ""
+    while i < total_len:
+        curr_ch = docstrings[i]
+        if i + 1 >= total_len:
+            nxt_ch = ""
         else:
+            nxt_ch = docstrings[i + 1]
+        if curr_ch == "/" and nxt_ch == "*":
+            # 进入注释部分
+            in_comm = True
+        if curr_ch == "*" and nxt_ch == "/":
+            in_comm = False
+            i += 2
             continue
-    return "".join(result)
+        if not in_comm and curr_ch != "\n":
+            acc += curr_ch
+        i += 1
+    return acc
+
+def remove_comm(docstrings):
+    docstrings = remove_single_line_comm(docstrings)
+    return remove_multiline_comm(docstrings)
+
+
+def get_export_key_from_docstrings(docstrings):
+    """根据数量统计获取函数导出关键字"""
+    decls = remove_comm(docstrings)
+    decls = re.sub(r"\([\s\S]*?\);", " ", decls)
+    token_filter_list = ["", "int"]
+    tokens = [
+        token for token in re.split("\s+", decls) if token not in token_filter_list
+    ]
+    counter = Counter(tokens)
+    return counter.most_common(1)[0][0]
+
+
+def convert(docstrings, skip_comm=False):
+    export_key = get_export_key_from_docstrings(docstrings)
+    docstrings = preprocess(docstrings)
+    return replace_all_decls(docstrings, export_key, skip_comm)
 
 
 def convert_file(input_path, output_path, output_name, skip_comm=False):
@@ -211,5 +217,18 @@ def fill_template(dll_name, content):
         return data
 
 
+def replace_all_decls(docstrings, export_key, skip_comm):
+    """转化函数声明并替换"""
+    def process(match):
+        return parse_decl(match.group()) + ","
+
+    pattern = rf"{export_key}[\s\S]*?\);"
+    if not skip_comm:
+        return re.sub(pattern, process, docstrings)
+    else:
+        decls = re.findall(pattern, docstrings)
+        return ",\n\n".join([parse_decl(decl) for decl in decls])
+
+
 if __name__ == "__main__":
-    print(split_to_docstring_list(docstrings))
+    print(get_export_key_from_docstrings(docstrings))

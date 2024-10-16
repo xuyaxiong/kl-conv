@@ -2,8 +2,6 @@ import pytest
 from src.lib.utils import (
     preprocess,
     convert,
-    split_to_docstring_list,
-    split_docstring_to_comm_and_decl,
     format_comm,
     parse_decl,
     export_comm_and_decl,
@@ -40,16 +38,6 @@ def test_format_comm():
 @pytest.mark.skipif(SKIP, reason="temporary skip")
 def test_parse_decl():
     print(parse_decl(decl))
-
-
-@pytest.mark.skipif(SKIP, reason="temporary skip")
-def test_split_docstring_to_comm_and_decl():
-    print(split_docstring_to_comm_and_decl(docstring))
-
-
-@pytest.mark.skipif(SKIP, reason="temporary skip")
-def test_split_to_docstring():
-    print(split_to_docstring_list(docstrings))
 
 
 @pytest.mark.skipif(SKIP, reason="temporary skip")

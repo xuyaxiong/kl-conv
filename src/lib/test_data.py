@@ -1,6 +1,6 @@
 docstrings = """
 //**********************************1. 粗定位**********************************//
-int updateTransformParams(double* calib, double* rectify, double* update);
+PS_API int updateTransformParams(double* calib, double* rectify, double* update);
 
 /*=================================step1:初始化图像检测类对象, 并重新计算背景平均灰度值======================================*/
 /*
@@ -12,7 +12,8 @@ int updateTransformParams(double* calib, double* rectify, double* update);
 @param[in] motorPos 采图时的x/y轴位置读数(double[2])
 @param[out] worldCoor 机械坐标(double[2 * n], x/y坐标)
 */
-PS_API int transformBiaxial(int n, double* imgCoor, double* params, double* motorPos, double* worldCoor);
+PS_API int transformBiaxial(int n, double* imgCoor, 
+    double* params, double* motorPos, double* worldCoor);
 
 /*
 @brief //机械坐标反变换至图像坐标
@@ -22,7 +23,7 @@ PS_API int transformBiaxial(int n, double* imgCoor, double* params, double* moto
     @param[in] motorPos 采图时的x/y轴位置读数(double[2])
     @param[out] imgCoor 图像坐标(double[2 * n], x/y坐标)
     */
-int transformInvBiaxial(int n, double* worldCoor, double* params, double* motorPos, double* imgCoor);
+PS_API int transformInvBiaxial(int n, double* worldCoor, double* params, double* motorPos, double* imgCoor);
 
 
 PS_API int transformInvBiaxialCenter(double* worldCoor, double* params, double* motorPos);
@@ -34,7 +35,7 @@ PS_API int transformInvBiaxialCenter(double* worldCoor, double* params, double* 
 @param[in] params 投影矩阵(double[9])
 @param[out] mapCoor 行列坐标(double[2 * n], 列/行坐标)
 */
-int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
+PS_API int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 
 /*
 @brief //行列坐标反变换至机械坐标
@@ -43,9 +44,9 @@ int transformMapping(int n, double* worldCoor, double* params, double* mapCoor);
 @param[in] params 投影矩阵(double[9], 正变换矩阵)
 @param[out] worldCoor 机械坐标(double[2 * n], x/y坐标)
 */
-int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
+PS_API int transformInvMapping(int n, double* mapCoor, double* params, double* worldCoor);
 
-DLL_API int getFullTransform(double* calibParams, double* rectifyParams, double* motorPos, double* mapParams, double* transParams = NULL, double* invParams = NULL);
+PS_API int getFullTransform(double* calibParams, double* rectifyParams, double* motorPos, double* mapParams, double* transParams = NULL, double* invParams = NULL);
 
 /*
 @brief 获取标定参数，根据标定图像坐标偏移量、机械坐标偏移量，计算变换矩阵
@@ -57,7 +58,7 @@ DLL_API int getFullTransform(double* calibParams, double* rectifyParams, double*
 @param[out] params 从图像变换到机械变换之间的变换参数(double[13]，第0~2位：tplCoor，第3/4位：旋转中心x/y，第5~12位：x/y平移变换的8参数投影矩阵)
 @return 0：成功，其他：失败
 */
-DLL_API	int estimateTriaxialTransform(int n, double* tplCoor, double *imgCoors, double* motorBiases, double* params);
+PS_API	int estimateTriaxialTransform(int n, double* tplCoor, double *imgCoors, double* motorBiases, double* params);
 """
 
 docstring = """

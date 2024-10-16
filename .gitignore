@@ -4,3 +4,4 @@ dist
 *.spec
 venv
 *.ts
+.pytest_cache
